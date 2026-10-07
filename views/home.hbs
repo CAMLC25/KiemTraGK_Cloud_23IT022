@@ -1,0 +1,21 @@
+<div style="max-width: 600px; margin: auto; font-family: sans-serif;">
+    <h2 style="color: #1B365D;">Hệ Thống Quản Lý Sách Cloud</h2>
+    
+    {{#if error}}
+        <p style="color: red; font-weight: bold;">{{error}}</p>
+    {{/if}}
+
+    <form action="/add" method="POST" style="margin-bottom: 20px; padding: 15px; border: 1px solid #ccc;">
+        <input type="text" name="productId" placeholder="Mã sản phẩm (VD: 022ABC)" required style="width: 100%; margin-bottom: 10px; padding: 8px;">
+        <input type="text" name="name" placeholder="Tên sách" required style="width: 100%; margin-bottom: 10px; padding: 8px;">
+        <input type="number" name="price" placeholder="Giá gốc" required style="width: 100%; margin-bottom: 10px; padding: 8px;">
+        <button type="submit" style="padding: 10px 20px; background-color: #1B365D; color: white; border: none;">Thêm Sách</button>
+    </form>
+
+    <h3>Danh Sách Đã Lưu</h3>
+    <ul>
+        {{#each books}}
+            <li><strong>[{{this.productId}}]</strong> {{this.name}} - Giá sau VAT (6%): {{this.priceWithVAT}} VNĐ</li>
+        {{/each}}
+    </ul>
+</div>
