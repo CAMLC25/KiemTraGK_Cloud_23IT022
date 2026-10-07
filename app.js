@@ -14,8 +14,13 @@ app.engine('hbs', engine({ extname: '.hbs' }));
 app.set('view engine', 'hbs');
 
 // 2. Đa luồng kết nối CSDL (Read & Write)
-const readConnection = mongoose.createConnection(process.env.READ_DB_URI);
-const writeConnection = mongoose.createConnection(process.env.WRITE_DB_URI);
+const connectionOptions = {
+    tls: true,
+    tlsAllowInvalidCertificates: true
+};
+
+const readConnection = mongoose.createConnection(process.env.READ_DB_URI, connectionOptions);
+const writeConnection = mongoose.createConnection(process.env.WRITE_DB_URI, connectionOptions);
 
 const bookSchema = new mongoose.Schema({
     productId: String,
@@ -30,7 +35,8 @@ const WriteBook = writeConnection.model('Book', bookSchema);
 // 3. Stateless Session lưu trực tiếp xuống Cloud Atlas
 const store = new MongoDBStore({
     uri: process.env.WRITE_DB_URI,
-    collection: 'cloudSessions'
+    collection: 'cloudSessions',
+    connectionOptions: connectionOptions
 });
 
 app.use(session({
@@ -86,4 +92,4 @@ app.post('/add', async (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server đang chạy tại http://localhost:${PORT}`));
+app.listen(PORT, '0.0.0.0', () => console.log(`Server đang chạy tại port ${PORT}`)); 
